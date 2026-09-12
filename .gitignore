@@ -1,4 +1,21 @@
-.coverage
 app/__init__.py
-*/__pycache__/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Environnement virtuel
 venv/
+.venv/
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+
+# Variables locales / secrets
+.env
