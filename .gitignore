@@ -19,3 +19,5 @@ htmlcov/
 
 # Variables locales / secrets
 .env
+
+pytest.ini
