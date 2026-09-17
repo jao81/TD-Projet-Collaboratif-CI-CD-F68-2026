@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from app.utils import predict
+from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
 
@@ -19,3 +20,10 @@ def read_root():
 @app.get("/favicon.ico")
 def favicon():
     return ""
+
+@app.post("/predict") 
+def predict_endpoint(data: PredictionRequest): 
+    if not data.features: 
+        raise HTTPException( status_code=400, detail="features must contain at least one value", ) 
+    predictions = predict(data.features) 
+    return {"predictions": predictions}
