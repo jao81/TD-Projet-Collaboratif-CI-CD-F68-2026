@@ -32,4 +32,4 @@ def test_predict_smoke():
     response = client.get("/")
     assert response.status_code == 200
     assert response.json()["message"] == "API is up and running!"
-    
+
