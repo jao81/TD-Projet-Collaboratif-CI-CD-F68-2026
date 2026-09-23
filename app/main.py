@@ -11,7 +11,10 @@ class PredictionRequest(BaseModel):
 @app.post("/predict")
 def predict_endpoint(data: PredictionRequest):
     predictions = predict(data.features)
-    return {"predictions": predictions}
+    return {
+        "model_version": "v1",
+        "predictions": predictions
+    }
 
 @app.get("/")
 def read_root():

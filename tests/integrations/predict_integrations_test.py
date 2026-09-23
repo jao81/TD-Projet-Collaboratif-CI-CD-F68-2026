@@ -12,7 +12,9 @@ def test_predict_success():
     "features": [3.5, 1.2, 4.9]
     })
     assert response.status_code == 200
-    assert response.json() == {"predictions": [7.0, 2.4, 9.8]}
+    data = response.json()
+    assert data["model_version"] == "v1"
+    assert data["predictions"] == [7.0, 2.4, 9.8]
 
 # -----------------------------------------------------------------------------
 # Cas invalides : données ne respectant pas les préconditions attendues
