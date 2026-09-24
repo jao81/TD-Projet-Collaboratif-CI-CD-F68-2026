@@ -1,0 +1,61 @@
+name: ci-develop
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+permissions:
+  contents: read
+
+jobs:
+  integration-check:
+    runs-on: ubuntu-latest
+    environment: cicd-lab
+
+    env:
+      POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+      POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: "5432"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Installer les dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Lint
+        run: ruff check app tests
+
+      - name: Sécurité
+        run: bandit -r app -v
+
+      - name: Tests unitaires + couverture
+        run: |
+          export PYTHONPATH=$(pwd)
+          python -m pytest tests/units -v --cov=app --cov-report=term-missing
+
+     # - name: Démarrer PostgreSQL
+       # run: docker compose up -d --wait db
+
+      #- name: Migrer et valider
+        #run: |
+          #docker compose run --rm flyway migrate
+          #docker compose run --rm flyway validate
+
+      - name: Tests d'intégration
+        run: |
+          export PYTHONPATH=$(pwd)
+          python -m pytest tests/integrations -v
+
+      - name: Nettoyage
+        if: always()
+        run: docker compose down -v

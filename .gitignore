@@ -8,10 +8,11 @@ __pycache__/
 venv/
 .venv/
 
-# Pytest / coverage
+# Pytest / coverage / ruff
 .pytest_cache/
 .coverage
 htmlcov/
+.ruff_cache
 
 # IDE
 .vscode/
@@ -19,5 +20,4 @@ htmlcov/
 
 # Variables locales / secrets
 .env
-
 pytest.ini
