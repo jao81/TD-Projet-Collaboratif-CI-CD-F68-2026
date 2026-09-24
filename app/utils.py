@@ -15,7 +15,19 @@ def predict(features):
     features = np.array(features).reshape(-1, 1)
     return model.predict(features).tolist()
 
+<<<<<<< HEAD
 def predict_nv_model(features):
     """Primiți o listă de caracteristici și returnați predicția pentru noul model."""
     features = np.array(features).reshape(-1, 1)
     return model_2.predict(features).tolist()
+=======
+# --- Modèle V2 : y = 2x + 1 ----------------------------------------------- 
+z_train = np.array([3, 5, 7, 9]) 
+ 
+model_2 = LinearRegression() 
+model_2.fit(X_train, z_train) 
+  
+def predict_nv_model(features): 
+    values = np.array(features).reshape(-1, 1) 
+    return model_2.predict(values).tolist() 
+>>>>>>> 0bb91fb6e17146876d4942ee369e15e7c8263eae
