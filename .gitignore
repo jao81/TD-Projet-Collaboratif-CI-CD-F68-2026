@@ -21,7 +21,11 @@ htmlcov/
 # Variables locales / secrets
 .env
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 pytest.ini
 =======
 >>>>>>> 0bb91fb6e17146876d4942ee369e15e7c8263eae
+=======
+pytest.ini
+>>>>>>> 8d4f4860631004f03f7d7043ba5a0ba61d782c38
