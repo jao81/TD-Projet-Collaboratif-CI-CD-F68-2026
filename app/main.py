@@ -1,9 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-<<<<<<< HEAD
 
-=======
->>>>>>> 8d4f4860631004f03f7d7043ba5a0ba61d782c38
 from app.utils import predict, predict_nv_model
 
 app = FastAPI()
