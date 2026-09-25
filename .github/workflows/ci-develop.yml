@@ -43,13 +43,13 @@ jobs:
           export PYTHONPATH=$(pwd)
           python -m pytest tests/units -v --cov=app --cov-report=term-missing
 
-     # - name: Démarrer PostgreSQL
-       # run: docker compose up -d --wait db
+      - name: Démarrer PostgreSQL
+        run: docker compose up -d --wait db
 
-      #- name: Migrer et valider
-        #run: |
-          #docker compose run --rm flyway migrate
-          #docker compose run --rm flyway validate
+      - name: Migrer et valider
+        run: |
+          docker compose run --rm flyway migrate
+          docker compose run --rm flyway validate
 
       - name: Tests d'intégration
         run: |
