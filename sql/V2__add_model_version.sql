@@ -1,0 +1,2 @@
+ALTER TABLE predictions
+ADD COLUMN model_version VARCHAR(50) NOT NULL DEFAULT 'v1';
