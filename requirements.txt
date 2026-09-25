@@ -2,3 +2,5 @@ fastapi
 uvicorn[standard]
 pydantic
 scikit-learn
+psycopg[binary]
+python-dotenv

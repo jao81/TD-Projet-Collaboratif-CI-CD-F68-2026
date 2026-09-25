@@ -1,0 +1,30 @@
+name: CD - Simulated Release
+
+on:
+  workflow_run:
+    workflows: ["ci-main"]
+    types:
+      - completed
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  simulated-deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du commit validé par la CI
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Simulation de livraison
+        run: |
+          echo "CI terminée avec succès."
+          echo "Branche validée : ${{ github.event.workflow_run.head_branch }}"
+          echo "Commit validé : ${{ github.event.workflow_run.head_sha }}"
+          echo "Déploiement simulé terminé."

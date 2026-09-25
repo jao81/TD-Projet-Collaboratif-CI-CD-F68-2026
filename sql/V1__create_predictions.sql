@@ -1,0 +1,6 @@
+CREATE TABLE predictions (
+    id BIGSERIAL PRIMARY KEY,
+    input_value NUMERIC(10,2) NOT NULL,
+    prediction NUMERIC(10,2) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

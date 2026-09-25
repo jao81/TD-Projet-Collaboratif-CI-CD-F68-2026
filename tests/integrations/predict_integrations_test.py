@@ -1,4 +1,6 @@
+import pytest
 from fastapi.testclient import TestClient
+
 from app.main import app
 
 client = TestClient(app)
@@ -11,7 +13,9 @@ def test_predict_success():
     "features": [3.5, 1.2, 4.9]
     })
     assert response.status_code == 200
-    assert response.json() == {"predictions": [7.0, 2.4, 9.8]}
+    data = response.json()
+    assert data["model_version"] == "v1"
+    assert data["predictions"] == [7.0, 2.4, 9.8]
 
 # -----------------------------------------------------------------------------
 # Cas invalides : données ne respectant pas les préconditions attendues
@@ -32,4 +36,32 @@ def test_predict_smoke():
     response = client.get("/")
     assert response.status_code == 200
     assert response.json()["message"] == "API is up and running!"
-    
+
+# -----------------------------------------------------------------------------
+# Cas 400 - 422 - 200 
+# -----------------------------------------------------------------------------
+def test_predict_empty_features_returns_400():
+    response = client.post(
+        "/predict",
+        json={"features": []},
+    )
+
+    assert response.status_code == 400
+    assert response.json() == {
+        "detail": "features must contain at least one value"
+    }
+
+
+def test_predict_missing_features_still_returns_422():
+    response = client.post("/predict", json={})
+    assert response.status_code == 422
+
+
+def test_predict_valid_request_still_returns_200():
+    response = client.post(
+        "/predict",
+        json={"features": [1.0, 2.0, 3.0]},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["predictions"] == pytest.approx([2.0, 4.0, 6.0])
