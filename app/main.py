@@ -1,8 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-from app.utils import predict, predict_nv_model
 from app.persistence import save_prediction
+from app.utils import predict, predict_nv_model
 
 app = FastAPI()
 

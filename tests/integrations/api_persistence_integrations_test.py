@@ -7,11 +7,10 @@ client = TestClient(app)
 
 
 def clean_predictions():
-    with get_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                "TRUNCATE TABLE predictions RESTART IDENTITY;"
-            )
+    with get_connection() as connection, connection.cursor() as cursor:
+        cursor.execute(
+            "TRUNCATE TABLE predictions RESTART IDENTITY;"
+        )
 
 
 def test_predict_persists_v1_predictions():
@@ -28,17 +27,16 @@ def test_predict_persists_v1_predictions():
     assert response.status_code == 200
 
     # Vérification de la persistance
-    with get_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                """
+    with get_connection() as connection, connection.cursor() as cursor:
+        cursor.execute(
+            """
                 SELECT input_value, prediction, model_version
                 FROM predictions
                 ORDER BY id;
                 """
-            )
+        )
 
-            rows = cursor.fetchall()
+        rows = cursor.fetchall()
 
     assert len(rows) == 2
 

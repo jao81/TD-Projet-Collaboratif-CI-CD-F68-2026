@@ -2,12 +2,12 @@ import pytest
 
 from app.persistence import get_connection, save_prediction
 
+
 def clean_predictions():
-    with get_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                "TRUNCATE TABLE predictions RESTART IDENTITY;"
-            )
+    with get_connection() as connection, connection.cursor() as cursor:
+        cursor.execute(
+            "TRUNCATE TABLE predictions RESTART IDENTITY;"
+        )
 
 def test_save_prediction_inserts_one_row():
     clean_predictions()
@@ -22,18 +22,17 @@ def test_save_prediction_inserts_one_row():
 
     prediction_id = prediction_ids[0]
 
-    with get_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                """
+    with get_connection() as connection, connection.cursor() as cursor:
+        cursor.execute(
+            """
                 SELECT id, input_value, prediction, model_version
                 FROM predictions
                 WHERE id = %s;
                 """,
-                (prediction_id,),
-            )
+            (prediction_id,),
+        )
 
-            row = cursor.fetchone()
+        row = cursor.fetchone()
 
     assert row is not None
     assert row[0] == prediction_id
@@ -52,17 +51,16 @@ def test_save_prediction_inserts_multiple_rows():
 
     assert len(prediction_ids) == 3
 
-    with get_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                """
+    with get_connection() as connection, connection.cursor() as cursor:
+        cursor.execute(
+            """
                 SELECT id, input_value, prediction, model_version
                 FROM predictions
                 ORDER BY id;
                 """
-            )
+        )
 
-            rows = cursor.fetchall()
+        rows = cursor.fetchall()
 
     assert len(rows) == 3
     assert [row[0] for row in rows] == prediction_ids
@@ -80,10 +78,9 @@ def test_save_prediction_rejects_different_array_lengths():
             model_version="v1",
         )
 
-    with get_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT COUNT(*) FROM predictions;")
-            count = cursor.fetchone()[0]
+    with get_connection() as connection, connection.cursor() as cursor:
+        cursor.execute("SELECT COUNT(*) FROM predictions;")
+        count = cursor.fetchone()[0]
 
     assert count == 0
 
@@ -97,9 +94,8 @@ def test_save_prediction_rejects_missing_model_version():
             model_version="",
         )
 
-    with get_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT COUNT(*) FROM predictions;")
-            count = cursor.fetchone()[0]
+    with get_connection() as connection, connection.cursor() as cursor:
+        cursor.execute("SELECT COUNT(*) FROM predictions;")
+        count = cursor.fetchone()[0]
 
     assert count == 0

@@ -1,4 +1,5 @@
 import os
+
 import psycopg
 from dotenv import load_dotenv
 
@@ -35,11 +36,10 @@ def save_prediction(features, predictions, model_version):
 
     prediction_ids = []
 
-    with get_connection() as connection:
-        with connection.cursor() as cursor:
-            for input_value, prediction in zip(features, predictions):
-                cursor.execute(
-                    """
+    with get_connection() as connection, connection.cursor() as cursor:
+        for input_value, prediction in zip(features, predictions):
+            cursor.execute(
+                """
                     INSERT INTO predictions (
                         input_value,
                         prediction,
@@ -48,13 +48,13 @@ def save_prediction(features, predictions, model_version):
                     VALUES (%s, %s, %s)
                     RETURNING id;
                     """,
-                    (
-                        input_value,
-                        prediction,
-                        model_version,
-                    ),
-                )
+                (
+                    input_value,
+                    prediction,
+                    model_version,
+                ),
+            )
 
-                prediction_ids.append(cursor.fetchone()[0])
+            prediction_ids.append(cursor.fetchone()[0])
 
     return prediction_ids
